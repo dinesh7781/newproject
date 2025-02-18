@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Feedback Survey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Employee Feedback Survey</h2>
+        
+        <form>
+            <label for="rating">How would you rate the company's work environment?</label>
+            <select id="rating" name="rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+            </select>
+
+            <label for="department">Which department do you work in?</label>
+            <select id="department" name="department">
+                <option value="hr" selected>HR</option>
+                <option value="it">IT</option>
+                <option value="finance">Finance</option>
+                <option value="marketing">Marketing</option>
+                <option value="sales">Sales</option>
+            </select>
+
+            <label>Do you feel valued at work?</label>
+            <div class="radio-group">
+                <input type="radio" id="yes" name="valued" value="yes">
+                <label for="yes">Yes</label>
+                <input type="radio" id="no" name="valued" value="no">
+                <label for="no">No</label>
+            </div>
+
+            <label for="suggestions">Any suggestions for improvement?</label>
+            <textarea id="suggestions" name="suggestions" rows="4"></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+</body>
+</html>
