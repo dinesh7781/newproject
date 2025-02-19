@@ -9,41 +9,109 @@
 <body>
 
     <div class="container">
-        <h2>Employee Feedback Survey</h2>
-        
-        <form>
-            <label for="rating">How would you rate the company's work environment?</label>
-            <select id="rating" name="rating">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5" selected>5</option>
-            </select>
-
-            <label for="department">Which department do you work in?</label>
-            <select id="department" name="department">
-                <option value="hr" selected>HR</option>
-                <option value="it">IT</option>
-                <option value="finance">Finance</option>
-                <option value="marketing">Marketing</option>
-                <option value="sales">Sales</option>
-            </select>
-
-            <label>Do you feel valued at work?</label>
-            <div class="radio-group">
-                <input type="radio" id="yes" name="valued" value="yes">
-                <label for="yes">Yes</label>
-                <input type="radio" id="no" name="valued" value="no">
-                <label for="no">No</label>
-            </div>
-
-            <label for="suggestions">Any suggestions for improvement?</label>
-            <textarea id="suggestions" name="suggestions" rows="4"></textarea>
-
-            <button type="submit">Submit</button>
-        </form>
+        <h2 id="surveyTitle">Loading Survey...</h2>
+        <form id="feedbackForm"></form>
     </div>
+
+    <script>
+        async function loadSurvey() {
+            try {
+                const response = await fetch('survey.json');
+                const survey = await response.json();
+                
+                // Set survey title
+                document.getElementById('surveyTitle').textContent = survey.surveyTitle;
+                
+                const form = document.getElementById('feedbackForm');
+                
+                survey.questions.forEach(question => {
+                    const questionContainer = document.createElement('div');
+                    questionContainer.className = 'question-container';
+                    
+                    // Create label
+                    const label = document.createElement('label');
+                    label.textContent = question.question;
+                    questionContainer.appendChild(label);
+                    
+                    // Create input based on answerType
+                    switch (question.answerType) {
+                        case 'rating':
+                        case 'dropdown':
+                            const select = document.createElement('select');
+                            select.name = `question_${question.id}`;
+                            question.options.forEach(option => {
+                                const optionElement = document.createElement('option');
+                                optionElement.value = option;
+                                optionElement.textContent = option;
+                                select.appendChild(optionElement);
+                            });
+                            questionContainer.appendChild(select);
+                            break;
+                            
+                        case 'yes_no':
+                            const radioGroup = document.createElement('div');
+                            radioGroup.className = 'radio-group';
+                            question.options.forEach(option => {
+                                const radioId = `question_${question.id}_${option.toLowerCase()}`;
+                                const radio = document.createElement('input');
+                                radio.type = 'radio';
+                                radio.name = `question_${question.id}`;
+                                radio.value = option;
+                                radio.id = radioId;
+                                
+                                const radioLabel = document.createElement('label');
+                                radioLabel.htmlFor = radioId;
+                                radioLabel.textContent = option;
+                                
+                                radioGroup.appendChild(radio);
+                                radioGroup.appendChild(radioLabel);
+                            });
+                            questionContainer.appendChild(radioGroup);
+                            break;
+                            
+                        case 'text':
+                            const textarea = document.createElement('textarea');
+                            textarea.name = `question_${question.id}`;
+                            textarea.rows = 4;
+                            questionContainer.appendChild(textarea);
+                            break;
+                    }
+                    
+                    form.appendChild(questionContainer);
+                });
+                
+                // Add submit button
+                const submitButton = document.createElement('button');
+                submitButton.type = 'submit';
+                submitButton.textContent = 'Submit';
+                form.appendChild(submitButton);
+                
+                // Add form submission handler
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    
+                    const formData = {};
+                    survey.questions.forEach(question => {
+                        const input = form.querySelector(`[name=question_${question.id}]`);
+                        if (question.answerType === 'yes_no') {
+                            formData[`question_${question.id}`] = form.querySelector(`input[name=question_${question.id}]:checked`)?.value || '';
+                        } else {
+                            formData[`question_${question.id}`] = input.value;
+                        }
+                    });
+                    
+                    console.log('Survey Responses:', formData);
+                });
+                
+            } catch (error) {
+                console.error('Error loading survey:', error);
+                document.getElementById('surveyTitle').textContent = 'Error loading survey';
+            }
+        }
+        
+        // Load survey when page loads
+        loadSurvey();
+    </script>
 
 </body>
 </html>

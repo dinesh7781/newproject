@@ -1,0 +1,29 @@
+{
+  "surveyTitle": "Employee Feedback Survey",
+  "questions": [
+    {
+      "id": 1,
+      "question": "How would you rate the company's work environment?",
+      "answerType": "rating",
+      "options": [1, 2, 3, 4, 5]
+    },
+    {
+      "id": 2,
+      "question": "Which department do you work in?",
+      "answerType": "dropdown",
+      "options": ["HR", "Engineering", "Sales", "Marketing"]
+    },
+    {
+      "id": 3,
+      "question": "Do you feel valued at work?",
+      "answerType": "yes_no",
+      "options": ["Yes", "No"]
+    },
+    {
+      "id": 4,
+      "question": "Any suggestions for improvement?",
+      "answerType": "text",
+      "options": []
+    }
+  ]
+}
